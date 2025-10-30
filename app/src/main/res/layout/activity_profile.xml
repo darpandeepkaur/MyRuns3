@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0"
+    tools:context=".ProfileActivity">
+
+    <View
+        android:id="@+id/topScrim"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/cardview_dark_background"
+        android:alpha="0.85"
+        android:foregroundGravity="top"/>
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="25dp"
+        android:elevation="@dimen/cardview_compat_inset_shadow"
+        app:title="MyRuns2" />
+
+    <LinearLayout
+        android:id="@+id/profileBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/toolbar">
+
+        <TextView
+            android:id="@+id/profile_photo_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_photo"
+            tools:layout_editor_absoluteX="21dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <ImageView
+            android:id="@+id/profile_photo"
+            android:layout_width="138dp"
+            android:layout_height="117dp"
+            android:layout_marginTop="35dp"
+            android:contentDescription="@string/image_description"
+            android:src="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="51dp" />
+
+        <Button
+            android:id="@+id/change_profile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="70dp"
+            android:text="@string/change_button"
+            tools:layout_editor_absoluteX="282dp"
+            tools:layout_editor_absoluteY="79dp"
+            app:cornerRadius="5dp"
+            android:textColor="#3A3838"
+            android:backgroundTint="#CDCECF" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:layout_below="@id/toolbar"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/your_name"
+            tools:layout_editor_absoluteX="19dp"
+            tools:layout_editor_absoluteY="190dp" />
+
+        <EditText
+            android:id="@+id/your_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="20"
+            android:inputType="text"
+            android:hint="@string/your_name_input"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="209dp" />
+
+        <TextView
+            android:id="@+id/email_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_header"
+            tools:layout_editor_absoluteX="19dp"
+            tools:layout_editor_absoluteY="271dp" />
+
+        <EditText
+            android:id="@+id/email_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="20"
+            android:inputType="textEmailAddress"
+            android:hint="@string/your_email_input"
+            tools:layout_editor_absoluteX="22dp"
+            tools:layout_editor_absoluteY="388dp" />
+
+        <TextView
+            android:id="@+id/phone_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_text"
+            tools:layout_editor_absoluteX="22dp"
+            tools:layout_editor_absoluteY="359dp" />
+
+        <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="20"
+            android:inputType="phone"
+            android:hint="@string/phone_input"
+            tools:layout_editor_absoluteX="21dp"
+            tools:layout_editor_absoluteY="298dp" />
+
+        <TextView
+            android:id="@+id/gender_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gender_text"
+            tools:layout_editor_absoluteX="22dp"
+            tools:layout_editor_absoluteY="446dp" />
+
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/female_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/female"
+                android:layout_weight="1"/>
+            <RadioButton
+                android:id="@+id/male_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/male"
+                android:layout_weight="1"/>
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/class_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/class_text"
+            tools:layout_editor_absoluteX="22dp"
+            tools:layout_editor_absoluteY="359dp" />
+
+        <EditText
+            android:id="@+id/class_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="20"
+            android:inputType="number"
+            android:hint="@string/class_input"
+            tools:layout_editor_absoluteX="21dp"
+            tools:layout_editor_absoluteY="298dp" />
+
+        <TextView
+            android:id="@+id/major_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/major_text"
+            tools:layout_editor_absoluteX="22dp"
+            tools:layout_editor_absoluteY="359dp" />
+
+        <EditText
+            android:id="@+id/your_major"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="20"
+            android:inputType="text"
+            android:hint="@string/major_input"
+            tools:layout_editor_absoluteX="21dp"
+            tools:layout_editor_absoluteY="298dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="195dp"
+                android:layout_height="wrap_content"
+                android:text="@string/save_button"
+                android:layout_marginStart="5dp"
+                android:layout_marginRight="5dp"
+                app:cornerRadius="5dp"
+                android:textColor="#3A3838"
+                android:backgroundTint="#CDCECF"/>
+
+            <Button
+                android:id="@+id/cancel_button"
+                android:layout_width="195dp"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel_button"
+                android:layout_toRightOf="@+id/save_button"
+                android:layout_marginLeft="5dp"
+                app:cornerRadius="5dp"
+                android:textColor="#3A3838"
+                android:backgroundTint="#CDCECF"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <View
+        android:id="@+id/bottomScrim"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:alpha="0.85"
+        android:layout_alignParentBottom="true"
+        android:background="@color/black" />
+
+</RelativeLayout>

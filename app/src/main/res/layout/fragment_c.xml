@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_c_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FragmentC"
+    android:background="#F0F0F0"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/AccountPreferences"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Account Preferences"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#009688"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"/>
+
+    <ListView
+        android:id="@+id/preferencesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/AccountPreferences"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:paddingTop="4dp"
+        android:layout_marginBottom="16dp">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/AdditionalSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Additional Settings"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#009688"
+        android:layout_below="@+id/preferencesList"
+        android:layout_marginBottom="4dp"  />
+
+    <ListView
+        android:id="@+id/settingsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/AdditionalSettings"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:paddingTop="4dp"
+        android:layout_marginBottom="16dp">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/Misc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Misc."
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#009688"
+        android:layout_below="@+id/settingsList"
+        android:layout_marginBottom="4dp" />
+
+    <ListView
+        android:id="@+id/miscList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Misc"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:paddingTop="4dp">
+
+    </ListView>
+
+    <View
+        android:id="@+id/bottomScrim"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true"
+        android:alpha="0.85"
+        android:background="@android:color/black" />
+
+</RelativeLayout>

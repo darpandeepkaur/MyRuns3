@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6F6F6"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="25dp"
+        android:elevation="@dimen/cardview_compat_inset_shadow"
+        app:title="@string/my_runs3" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:background="#F6F6F6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        app:tabTextColor="@color/cardview_dark_background"
+        app:tabIndicatorColor="@android:color/holo_blue_dark"
+        app:tabRippleColor="@android:color/darker_gray"
+        app:tabIndicatorFullWidth="true"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager"
+        android:layout_height="915dp"
+        android:layout_width="match_parent"
+        android:layout_below="@id/tabLayout"
+        />
+
+    <View
+        android:id="@+id/topScrim"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/cardview_dark_background"
+        android:alpha="0.85"
+        android:foregroundGravity="top"/>
+
+</RelativeLayout>

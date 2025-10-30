@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Darpandeep_Kaur_MyRuns3</string>
+    <string name="fragmentA">This is fragment A</string>
+    <string name="fragmentB">This is fragment B</string>
+    <string name="fragmentC">This is fragment C</string>
+    <string name="InputType">Input Type</string>
+    <string name="ActivityType">Activity Type</string>
+    <string name="StartButton">START</string>
+    <string name="StartButtonSave">SAVE</string>
+    <string name="StartButtonCancel">CANCEL</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile_photo">Profile Photo:</string>
+    <string name="change_button">Change</string>
+    <string name="image_description">Profile photo being displayed here</string>
+    <string name="my_runs3">My Runs3</string>
+    <string name="your_name">Name</string>
+    <string name="your_name_input">Your Name</string>
+    <string name="email_header">Email</string>
+    <string name="your_email_input">Your Email</string>
+    <string name="phone_text">Phone</string>
+    <string name="gender_text">Gender</string>
+    <string name="phone_input">Your Phone Number</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="class_text">Class</string>
+    <string name="class_input">eg. 2025</string>
+    <string name="major_input">Your Major</string>
+    <string name="major_text">Major</string>
+    <string name="save_button">SAVE</string>
+    <string name="cancel_button">CANCEL</string>
+
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="teal_700">#00897B</color>
+    <color name="setting_title">#212121</color>
+    <color name="setting_summary">#757575</color>
+    <color name="setting_header">#00897B</color>
+    <color name="black">#000000</color>
+</resources>
