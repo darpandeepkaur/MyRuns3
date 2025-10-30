@@ -6,8 +6,10 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
@@ -42,7 +44,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var profile_image: ImageView
     private lateinit var myViewModel: MyViewModel
 
-    private lateinit var cameraResult: ActivityResultLauncher<Intent>
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+
     private val PREF_NAME = "profile_prefs"
     private val NAME = "name"
     private val EMAIL = "email"
@@ -58,7 +61,7 @@ class ProfileActivity : AppCompatActivity() {
         if (success) {
             myViewModel.tempImgUri?.let { uri ->
 
-                val bitmap = Util.getBitmap(this, uri)  // Uses your Util (with 90° rotation)
+                val bitmap = Util.getBitmap(this, uri)
                 myViewModel.userImage.value = bitmap
                 saveImageUri(uri)  // Save URI for persistence
 
@@ -70,6 +73,15 @@ class ProfileActivity : AppCompatActivity() {
     private val pickFromGalleryLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
+                try {
+                    // Persist access so image is accessible even after restart
+                    contentResolver.takePersistableUriPermission(
+                        it,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: SecurityException) {
+                    e.printStackTrace()
+                }
                 val bmp = Util.getBitmap(this, it)
                 myViewModel.userImage.value = bmp
                 saveImageUri(it)
@@ -93,8 +105,6 @@ class ProfileActivity : AppCompatActivity() {
         male_radio = findViewById(R.id.male_button)
         profile_image = findViewById(R.id.profile_photo)
 
-        Util.checkPermissions(this)
-
         myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
         myViewModel.userImage.observe(this) { bmp ->
             bmp?.let { profile_image.setImageBitmap(it) }
@@ -103,14 +113,21 @@ class ProfileActivity : AppCompatActivity() {
         val temporaryImageFile = File(getExternalFilesDir(null), tempImageFileName)
         myViewModel.tempImgUri = FileProvider.getUriForFile(this, "${applicationContext.packageName}.fileprovider", temporaryImageFile)
 
-        cameraResult = registerForActivityResult(StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                myViewModel.tempImgUri?.let { uri ->
-                    val bitmap = Util.getBitmap(this, uri)
-                    myViewModel.userImage.value = bitmap
-                }
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val cameraGranted = permissions[android.Manifest.permission.CAMERA] ?: false
+            val readGranted =
+                if (Build.VERSION.SDK_INT >= 33)
+                    permissions[android.Manifest.permission.READ_MEDIA_IMAGES] ?: false
+                else
+                    permissions[android.Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
+
+            if (!cameraGranted || !readGranted) {
+                showPermissionDialog()
             }
         }
+        requestCameraAndGalleryPermissions()
 
         changeButton.setOnClickListener {
             val options = arrayOf("Take Photo", "Choose from Gallery")
@@ -178,5 +195,28 @@ class ProfileActivity : AppCompatActivity() {
     private fun saveImageUri(uri: Uri) {
         val sharedPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
         sharedPrefs.edit().putString(PROFILE_URI, uri.toString()).apply()
+    }
+
+    private fun requestCameraAndGalleryPermissions() {
+        val permissions = mutableListOf(android.Manifest.permission.CAMERA)
+        if (Build.VERSION.SDK_INT >= 33) {
+            permissions.add(android.Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        permissionLauncher.launch(permissions.toTypedArray())
+    }
+
+    private fun showPermissionDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Permissions Required")
+            .setMessage("Camera and gallery access are required to select or capture a profile photo.")
+            .setPositiveButton("Open Settings") { _, _ ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 }

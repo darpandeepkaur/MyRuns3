@@ -26,11 +26,14 @@ class DialogFrag : DialogFragment(), DialogInterface.OnClickListener{
         const val MANUAL_DIALOG = 0
         const val INT_DIALOG = 1
         const val TEXT_DIALOG = 2
+        private const val STATE_INPUT = "saved_input"
 
     }
 
     private var listener: onValueCapturedListener? = null
     private var inputEditText: EditText? = null
+    private var lastInput: String? = null
+
 
     fun setOnValueCapturedListener(l: onValueCapturedListener){
         listener = l
@@ -46,6 +49,12 @@ class DialogFrag : DialogFragment(), DialogInterface.OnClickListener{
 
         inputEditText = view.findViewById(R.id.edit_input)
         inputEditText?.hint = hint
+
+        // Restore text if rotated
+        lastInput = savedInstanceState?.getString(STATE_INPUT)
+        if (!lastInput.isNullOrEmpty()) {
+            inputEditText?.setText(lastInput)
+        }
 
         val builder = AlertDialog.Builder(requireActivity())
         builder.setTitle(title)
@@ -67,6 +76,14 @@ class DialogFrag : DialogFragment(), DialogInterface.OnClickListener{
         builder.setPositiveButton("ok", this)
         builder.setNegativeButton("cancel", this)
         return builder.create()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Preserve partially typed input across rotation
+        inputEditText?.text?.toString()?.let {
+            outState.putString(STATE_INPUT, it)
+        }
     }
 
     override fun onClick(dialog: DialogInterface, which: Int){
@@ -97,6 +114,7 @@ class DialogFrag : DialogFragment(), DialogInterface.OnClickListener{
             DialogInterface.BUTTON_NEGATIVE -> {
                 dialog.dismiss()
             }
+            DialogInterface.BUTTON_NEGATIVE -> dialog.dismiss()
         }
     }
 }

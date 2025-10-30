@@ -11,6 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
+import androidx.activity.viewModels
+import com.darpandeepkaur.darpandeepkaurmyruns3.database.ExerciseEntry
 import java.util.*
 
 class DisplayEntryActivity : AppCompatActivity() {
@@ -22,22 +24,39 @@ class DisplayEntryActivity : AppCompatActivity() {
     private lateinit var distanceText: TextView
     private lateinit var calorieText: TextView
     private lateinit var heartRateText: TextView
+    private val viewModel: DisplayEntryViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_entry)
 
-        // Toolbar delete button
+        setupToolbar()
+        initViews()
+
+        val entryId = intent.getLongExtra("ENTRY_ID", -1)
+        if (viewModel.entry != null) {
+            displayEntry(viewModel.entry!!)
+        } else if (entryId != -1L) {
+            loadEntry(entryId)
+        }
+    }
+
+    private fun setupToolbar() {
         val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
         toolbar.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.action_delete) {
-                val entryId = intent.getLongExtra("ENTRY_ID", -1)
-                if (entryId != -1L) deleteEntry(entryId)
-                true
-            } else false
+            when (item.itemId) {
+                R.id.action_delete -> {
+                    val entryId = intent.getLongExtra("ENTRY_ID", -1)
+                    if (entryId != -1L) deleteEntry(entryId)
+                    true
+                }
+                else -> false
+            }
         }
+    }
 
-        // Initialize TextViews
+    private fun initViews() {
         inputTypeText = findViewById(R.id.inputTypeText)
         activityTypeText = findViewById(R.id.activityTypeText)
         dateTimeText = findViewById(R.id.dateTimeText)
@@ -45,29 +64,30 @@ class DisplayEntryActivity : AppCompatActivity() {
         distanceText = findViewById(R.id.distanceText)
         calorieText = findViewById(R.id.calorieText)
         heartRateText = findViewById(R.id.heartRateText)
-
-        val entryId = intent.getLongExtra("ENTRY_ID", -1)
-        if (entryId != -1L) loadEntry(entryId)
     }
 
     private fun loadEntry(entryId: Long) {
         lifecycleScope.launch(Dispatchers.IO) {
             val dao = ExerciseDatabase.getInstance(this@DisplayEntryActivity).exerciseDao()
             val entry = dao.getEntryById(entryId)
-            entry?.let {
-                val dateStr = SimpleDateFormat("HH:mm:ss MMM dd yyyy", Locale.getDefault())
-                    .format(Date(it.dateTime))
-                withContext(Dispatchers.Main) {
-                    inputTypeText.text = "Manual Entry"
-                    activityTypeText.text = getActivityName(it.activityType)
-                    dateTimeText.text = dateStr
-                    durationText.text = "${it.duration.toInt()} mins"
-                    distanceText.text = "${it.distance} Miles"
-                    calorieText.text = "${it.calorie?.toInt() ?: 0} cals"
-                    heartRateText.text = "${it.heartRate?.toInt() ?: 0} bpm"
-                }
+            viewModel.entry = entry
+            withContext(Dispatchers.Main) {
+                entry?.let { displayEntry(it) }
             }
         }
+    }
+
+    private fun displayEntry(entry: ExerciseEntry) {
+        val dateStr = SimpleDateFormat("HH:mm:ss MMM dd yyyy", Locale.getDefault())
+            .format(Date(entry.dateTime))
+
+        inputTypeText.text = "Manual Entry"
+        activityTypeText.text = getActivityName(entry.activityType)
+        dateTimeText.text = dateStr
+        durationText.text = "${(entry.duration / 60).toInt()} mins ${(entry.duration % 60).toInt()} secs"
+        distanceText.text = "${entry.distance} Miles"
+        calorieText.text = "${entry.calorie?.toInt() ?: 0} cals"
+        heartRateText.text = "${entry.heartRate?.toInt() ?: 0} bpm"
     }
 
     private fun deleteEntry(entryId: Long) {

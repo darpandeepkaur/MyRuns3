@@ -41,6 +41,14 @@ class StartActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[StartViewModel::class.java]
 
+        savedInstanceState?.let {
+            viewModel.duration = it.getInt("duration").takeIf { v -> v != -1 }
+            viewModel.distance = it.getInt("distance").takeIf { v -> v != -1 }
+            viewModel.calories = it.getInt("calories").takeIf { v -> v != -1 }
+            viewModel.heartRate = it.getInt("heartRate").takeIf { v -> v != -1 }
+            viewModel.comments = it.getString("comments")
+        }
+
         mylistview = findViewById(R.id.myListView)
         saveButton = findViewById(R.id.saveButton)
         cancelButton = findViewById(R.id.cancelButton)
@@ -126,6 +134,15 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("duration", viewModel.duration ?: -1)
+        outState.putInt("distance", viewModel.distance ?: -1)
+        outState.putInt("calories", viewModel.calories ?: -1)
+        outState.putInt("heartRate", viewModel.heartRate ?: -1)
+        outState.putString("comments", viewModel.comments)
+    }
+
     private fun showDatePicker(onDateSelected: (year: Int, month: Int, day: Int) -> Unit) {
         val year = date.get(Calendar.YEAR)
         val month = date.get(Calendar.MONTH)
@@ -157,7 +174,7 @@ class StartActivity : AppCompatActivity() {
             putString(DialogFrag.LABEL_KEY, hint)
         }
         inputDialog.arguments = bundle
-        inputDialog.setOnValueCapturedListener(object : DialogFrag.onValueCapturedListener {  // Fix: Lowercase 'o' to match DialogFrag
+        inputDialog.setOnValueCapturedListener(object : DialogFrag.onValueCapturedListener {
             override fun onValueCaptured(value: String) {
                 onValueCaptured(value)
             }
