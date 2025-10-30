@@ -7,7 +7,8 @@ import java.util.*
 
 @Entity(tableName = "exercise_entries")
 data class ExerciseEntry(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val inputType: Int,           // Manual, GPS, or Automatic
     val activityType: Int,        // Running, Walking, etc.
     val dateTime: Long,           // When this entry happened (stored as timestamp)

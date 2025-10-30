@@ -13,9 +13,13 @@ interface ExerciseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entry: ExerciseEntry): Long
 
-    // Delete an existing exercise entry
+    // Delete an existing exercise entry by passing the full object
     @Delete
     suspend fun delete(entry: ExerciseEntry)
+
+    // Delete an entry directly by its ID
+    @Query("DELETE FROM exercise_entries WHERE id = :entryId")
+    suspend fun deleteById(entryId: Long)
 
     // Get all entries from newest to oldest
     @Query("SELECT * FROM exercise_entries ORDER BY id DESC")
@@ -23,5 +27,5 @@ interface ExerciseDao {
 
     // Get a specific entry by ID
     @Query("SELECT * FROM exercise_entries WHERE id = :id LIMIT 1")
-    suspend fun getEntryById(id: Long): ExerciseEntry
+    suspend fun getEntryById(id: Long): ExerciseEntry?
 }

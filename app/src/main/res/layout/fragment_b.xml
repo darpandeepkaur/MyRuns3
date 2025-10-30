@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".FragmentB"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
+
+    <ListView
+        android:id="@+id/historyListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp" />
 
     <View
         android:id="@+id/bottomScrim"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:alpha="0.85"
-        android:layout_alignParentBottom="true"
         android:background="@color/black" />
-</RelativeLayout>
+
+</LinearLayout>

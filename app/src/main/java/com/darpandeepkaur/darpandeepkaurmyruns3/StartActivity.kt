@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.darpandeepkaur.darpandeepkaurmyruns3.database.ExerciseDatabase
 import com.darpandeepkaur.darpandeepkaurmyruns3.database.ExerciseEntry
@@ -22,6 +23,8 @@ class StartActivity : AppCompatActivity() {
     private var time = Calendar.getInstance()
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
+    private lateinit var viewModel: StartViewModel
+
     var duration: Int? = null
     var distance: Int? = null
     var calories: Int? = null
@@ -35,6 +38,8 @@ class StartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
+
+        viewModel = ViewModelProvider(this)[StartViewModel::class.java]
 
         mylistview = findViewById(R.id.myListView)
         saveButton = findViewById(R.id.saveButton)
@@ -50,7 +55,8 @@ class StartActivity : AppCompatActivity() {
                 }
 
                 1 -> showTimePicker { hour, minute ->
-                    time.set(hour, minute)
+                    time.set(Calendar.HOUR_OF_DAY, hour)
+                    time.set(Calendar.MINUTE, minute)
                 }
                 2 -> showInputDialog("Duration","Enter duration", DialogFrag.INT_DIALOG) {
                         value -> duration = value.toIntOrNull()
@@ -73,15 +79,28 @@ class StartActivity : AppCompatActivity() {
         }
 
         saveButton.setOnClickListener {
+            saveButton.isEnabled = false
             // Create a background coroutine
             lifecycleScope.launch(Dispatchers.IO) {
                 val dao = ExerciseDatabase.getInstance(this@StartActivity).exerciseDao()
 
+                // Combine the date and time selected by user
+                val selectedDateTime = Calendar.getInstance()
+                selectedDateTime.set(
+                    date.get(Calendar.YEAR),
+                    date.get(Calendar.MONTH),
+                    date.get(Calendar.DAY_OF_MONTH),
+                    time.get(Calendar.HOUR_OF_DAY),
+                    time.get(Calendar.MINUTE),
+                    0
+                )
+
+                // Create and save ExerciseEntry
                 val entry = ExerciseEntry(
                     inputType = 0,
                     activityType = 0,
-                    dateTime = System.currentTimeMillis(),
-                    duration = duration?.toDouble() ?: 0.0,
+                    dateTime = selectedDateTime.timeInMillis,
+                    duration = (duration?.toDouble() ?: 0.0) * 60.0,
                     distance = distance?.toDouble() ?: 0.0,
                     avgPace = null,
                     avgSpeed = null,
@@ -92,11 +111,14 @@ class StartActivity : AppCompatActivity() {
                     locationList = null
                 )
 
-                dao.insert(entry)
-            }
+                val id = dao.insert(entry)
 
-            Toast.makeText(this, "Saved entry to database!", Toast.LENGTH_SHORT).show()
-            finish()
+                runOnUiThread {
+                    Toast.makeText(this@StartActivity, "Saved entry #$id", Toast.LENGTH_SHORT)
+                        .show()
+                    finish()
+                }
+            }
         }
 
         cancelButton.setOnClickListener(){
